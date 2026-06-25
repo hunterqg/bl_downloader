@@ -1,4 +1,4 @@
-# Bilibili Downloader | B站视频下载器
+# B站视频下载器
 
 一个带桌面图形界面的 B站视频下载工具。
 
@@ -14,10 +14,10 @@
 ## 快速启动
 
 ```bash
-# Linux / macOS
+# Linux / macOS 系统
 ./run.sh
 
-# Windows
+# Windows 系统
 双击运行 run.bat
 ```
 
@@ -44,6 +44,6 @@ python -m bl_downloader
 - `bilibili-api-python` — B站 API 客户端
 - `httpx` — 异步 HTTP 下载
 
-## 许可证
+## 开源许可
 
 MIT
