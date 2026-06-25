@@ -2,7 +2,7 @@
 name = "bl_downloader"
 version = "0.1.0"
 description = "Bilibili video downloader with desktop GUI"
-readme = "README.md"
+readme = "README.zh.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 dependencies = [
