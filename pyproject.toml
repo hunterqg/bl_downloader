@@ -1,0 +1,28 @@
+[project]
+name = "bl_downloader"
+version = "0.1.0"
+description = "Bilibili video downloader with desktop GUI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "bilibili-api-python>=17.4",
+    "httpx>=0.27",
+]
+
+[project.scripts]
+bl-downloader = "bl_downloader.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["bl_downloader*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
