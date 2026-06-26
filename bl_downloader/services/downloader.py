@@ -12,19 +12,12 @@ from bilibili_api import video as bili_video
 from bilibili_api.video import AudioQuality
 from httpx import AsyncClient
 
+from bl_downloader.errors import DownloadCancelled, DownloadError
 from bl_downloader.services.video_info import _create_video, parse_url
 from bl_downloader.types import VideoQuality
 from bl_downloader.utils.ffmpeg import check_ffmpeg, merge_video_audio
 
 logger = logging.getLogger(__name__)
-
-
-class DownloadError(Exception):
-    ...
-
-
-class DownloadCancelled(Exception):
-    ...
 
 
 ProgressCallback = Callable[[float, str], None]
@@ -163,6 +156,7 @@ async def download_video(
                 audio_path,
                 final_path,
                 on_progress=lambda p: on_progress(p, ''),
+                stop_event=stop_event,
             )
 
             import shutil

@@ -6,7 +6,10 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 from collections.abc import Callable
+
+from bl_downloader.errors import DownloadCancelled
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +57,7 @@ def merge_video_audio(
     audio_path: str,
     output_path: str,
     on_progress: Callable[[float], None] | None = None,
+    stop_event: threading.Event | None = None,
 ) -> str:
     ffmpeg_path = _get_ffmpeg_path()
     logger.info('合并视频+音频: %s + %s -> %s', video_path, audio_path, output_path)
@@ -82,6 +86,10 @@ def merge_video_audio(
 
     if process.stderr:
         for line in iter(process.stderr.readline, ''):
+            if stop_event is not None and stop_event.is_set():
+                process.terminate()
+                process.wait()
+                raise DownloadCancelled('合并已取消')
             if total_ms is None:
                 m = duration_pattern.search(line)
                 if m:

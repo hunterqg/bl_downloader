@@ -8,11 +8,8 @@ import threading
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-from bl_downloader.services.downloader import (
-    DownloadCancelled,
-    DownloadError,
-    download_video,
-)
+from bl_downloader.errors import DownloadCancelled, DownloadError
+from bl_downloader.services.downloader import download_video
 from bl_downloader.services.video_info import (
     VideoInfoError,
     format_duration,
@@ -101,11 +98,11 @@ class App:
         btn_frame = ttk.Frame(frame)
         btn_frame.grid(row=4, column=0, columnspan=3, pady=(8, 4))
         self.download_btn = ttk.Button(
-            btn_frame, text='开始下载', command=self._on_download, width=12
+            btn_frame, text='开始', command=self._on_download, width=12
         )
         self.download_btn.pack(side=tk.LEFT, padx=4)
         self.cancel_btn = ttk.Button(
-            btn_frame, text='停止下载', command=self._on_stop, width=12, state=tk.DISABLED
+            btn_frame, text='停止', command=self._on_stop, width=12, state=tk.DISABLED
         )
         self.cancel_btn.pack(side=tk.LEFT, padx=4)
 
