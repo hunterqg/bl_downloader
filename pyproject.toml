@@ -8,6 +8,7 @@ license = {text = "MIT"}
 dependencies = [
     "bilibili-api-python>=17.4",
     "httpx>=0.27",
+    "pillow>=10.0",
 ]
 
 [project.scripts]
