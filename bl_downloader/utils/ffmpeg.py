@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import logging
+import os
 import re
+import shutil
 import subprocess
+import sys
 from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
@@ -12,11 +15,31 @@ class FFmpegError(Exception):
     ...
 
 
+def _get_ffmpeg_path() -> str:
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        bundled = os.path.join(sys._MEIPASS, 'ffmpeg.exe')
+        if os.path.exists(bundled):
+            return bundled
+
+    exe_dir = os.path.dirname(sys.executable)
+    local = os.path.join(exe_dir, 'ffmpeg.exe')
+    if os.path.exists(local):
+        return local
+
+    which = shutil.which('ffmpeg')
+    if which:
+        return which
+
+    raise FFmpegError('未找到 ffmpeg，请安装 ffmpeg 并确保其在 PATH 中')
+
+
 def check_ffmpeg() -> str:
+    ffmpeg_path = _get_ffmpeg_path()
     try:
         result = subprocess.run(
-            ['ffmpeg', '-version'],
+            [ffmpeg_path, '-version'],
             capture_output=True, text=True, timeout=10,
+            creationflags=subprocess.CREATE_NO_WINDOW,
         )
         if result.returncode != 0:
             raise FFmpegError('ffmpeg 不可用')
@@ -32,9 +55,10 @@ def merge_video_audio(
     output_path: str,
     on_progress: Callable[[float], None] | None = None,
 ) -> str:
+    ffmpeg_path = _get_ffmpeg_path()
     logger.info('合并视频+音频: %s + %s -> %s', video_path, audio_path, output_path)
     cmd = [
-        'ffmpeg', '-y',
+        ffmpeg_path, '-y',
         '-i', video_path,
         '-i', audio_path,
         '-c:v', 'copy',
@@ -49,6 +73,7 @@ def merge_video_audio(
         stderr=subprocess.PIPE,
         encoding='utf-8',
         errors='replace',
+        creationflags=subprocess.CREATE_NO_WINDOW,
     )
 
     duration_pattern = re.compile(r'Duration: (\d+):(\d+):(\d+)\.(\d+)')
