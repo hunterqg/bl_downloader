@@ -12,7 +12,8 @@ from bilibili_api.video import (
 from bl_downloader.types import QUALITY_LABELS, VideoInfo, VideoQuality
 
 
-class VideoInfoError(Exception): ...
+class VideoInfoError(Exception):
+    """视频信息获取或解析过程中的异常"""
 
 
 _BVID_PATTERN = re.compile(r"BV[a-zA-Z0-9]{10,}")
@@ -22,6 +23,8 @@ _SS_PATTERN = re.compile(r"ss(\d+)", re.IGNORECASE)
 
 
 def parse_url(url: str) -> tuple[str, str | int]:
+    """从 URL 中提取 BVID、AID、EP 或 SS 标识"""
+
     m = _BVID_PATTERN.search(url)
     if m:
         return "bvid", m.group(0)
@@ -43,6 +46,8 @@ def _create_video(key: str, value: str | int):
 
 
 async def get_video_info(url: str, credential: Credential | None = None) -> VideoInfo:
+    """获取视频元信息（标题、UP主、时长、可用清晰度等）"""
+
     key, value = parse_url(url)
     v = _create_video(key, value)
     if credential is not None:
@@ -86,6 +91,8 @@ async def get_video_info(url: str, credential: Credential | None = None) -> Vide
 
 
 def format_duration(seconds: int) -> str:
+    """将秒数格式化为 H:MM:SS 或 M:SS 的可读字符串"""
+
     h, rem = divmod(seconds, 3600)
     m, s = divmod(rem, 60)
     if h:
@@ -94,5 +101,7 @@ def format_duration(seconds: int) -> str:
 
 
 def quality_display(q: VideoQuality) -> str:
+    """返回清晰度的中文显示文本（含品质码），用于下拉列表"""
+
     label = QUALITY_LABELS.get(q, f"未知 ({q.value})")
     return f"{label} ({q.value})"

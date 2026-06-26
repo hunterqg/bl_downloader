@@ -5,6 +5,9 @@ from enum import IntEnum
 
 
 class VideoQuality(IntEnum):
+    """B站视频清晰度枚举，值对应 Bilibili API 中的 quality 参数"""
+
+    # 注意：Python 不允许以数字开头的枚举成员名，故加下划线前缀
     _8K = 127
     DOLBY = 126
     HDR = 125
@@ -20,6 +23,7 @@ class VideoQuality(IntEnum):
 
 
 QUALITY_LABELS: dict[VideoQuality, str] = {
+    # 清晰度枚举 -> 中文显示标签的映射
     VideoQuality._8K: "8K 超高清",
     VideoQuality.DOLBY: "杜比视界",
     VideoQuality.HDR: "HDR 真彩",
@@ -37,6 +41,8 @@ QUALITY_LABELS: dict[VideoQuality, str] = {
 
 @dataclass
 class VideoInfo:
+    """解析后得到的视频元数据"""
+
     title: str
     duration: int
     uploader: str
@@ -48,6 +54,8 @@ class VideoInfo:
 
 @dataclass
 class DownloadProgress:
+    """下载进度数据，用于在后台线程和 GUI 之间传递"""
+
     percent: float
     speed: str
     stage: str
@@ -55,6 +63,8 @@ class DownloadProgress:
 
 @dataclass
 class DownloadResult:
+    """下载操作的最终结果"""
+
     success: bool
     file_path: str = ""
     message: str = ""

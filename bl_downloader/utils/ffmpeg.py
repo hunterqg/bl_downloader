@@ -14,10 +14,12 @@ from bl_downloader.errors import DownloadCancelled
 logger = logging.getLogger(__name__)
 
 
-class FFmpegError(Exception): ...
+class FFmpegError(Exception):
+    """FFmpeg 相关操作失败时抛出的异常"""
 
 
 def _get_ffmpeg_path() -> str:
+    """查找 ffmpeg 可执行文件路径（支持 PyInstaller 打包和系统 PATH）"""
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         bundled = os.path.join(sys._MEIPASS, "ffmpeg.exe")
         if os.path.exists(bundled):
@@ -36,6 +38,8 @@ def _get_ffmpeg_path() -> str:
 
 
 def check_ffmpeg() -> str:
+    """检查 ffmpeg 是否可用，返回版本信息字符串"""
+
     ffmpeg_path = _get_ffmpeg_path()
     try:
         result = subprocess.run(
@@ -60,6 +64,7 @@ def merge_video_audio(
     on_progress: Callable[[float], None] | None = None,
     stop_event: threading.Event | None = None,
 ) -> str:
+    """使用 ffmpeg 将视频文件和音频文件合并为一个 MP4 文件，支持进度回调"""
     ffmpeg_path = _get_ffmpeg_path()
     logger.info("合并视频+音频: %s + %s -> %s", video_path, audio_path, output_path)
     cmd = [

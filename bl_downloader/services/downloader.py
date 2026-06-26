@@ -26,6 +26,8 @@ StageCallback = Callable[[str], None]
 
 
 def _sanitize_filename(name: str) -> str:
+    """移除文件名中的非法字符，并截断到 30 个字符"""
+
     for ch in r'\/:*?"<>|':
         name = name.replace(ch, "_")
     name = name.strip() or "video"
@@ -40,6 +42,7 @@ async def _download_stream(
     on_progress: ProgressCallback,
     stop_event: threading.Event,
 ) -> str:
+    """下载单个流（视频或音频）到本地文件，支持进度回调和取消"""
     logger.info("开始下载 %s -> %s", label, save_path)
     async with client.stream("GET", url) as resp:
         resp.raise_for_status()
@@ -78,6 +81,7 @@ async def download_video(
     stop_event: threading.Event,
     credential: Credential | None = None,
 ) -> str:
+    """下载 B站 视频主流程：获取信息 -> 下载流 -> 合并音视频 -> 清理临时文件"""
     check_ffmpeg()
 
     key, value = parse_url(url)

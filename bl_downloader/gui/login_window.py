@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class LoginWindow(tk.Toplevel):
+    """B站扫码登录弹窗：生成二维码、轮询扫码状态、回调凭据"""
+
     def __init__(
         self,
         parent: tk.Tk,
@@ -41,6 +43,8 @@ class LoginWindow(tk.Toplevel):
         self._start_login()
 
     def _build_ui(self) -> None:
+        """构建登录弹窗的 UI：二维码图片、状态文字、重试按钮"""
+
         self.qr_label = ttk.Label(self)
         self.qr_label.pack(pady=(24, 8))
 
@@ -91,6 +95,8 @@ class LoginWindow(tk.Toplevel):
         threading.Thread(target=run, daemon=True).start()
 
     def _poll(self) -> None:
+        """定时轮询队列，将后台线程的事件更新到 GUI"""
+
         try:
             while True:
                 msg, data = self._queue.get_nowait()

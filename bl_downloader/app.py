@@ -27,6 +27,8 @@ logger = logging.getLogger(__name__)
 
 
 class _ToolTip:
+    """鼠标悬停提示工具类"""
+
     def __init__(self, widget: tk.Widget, text: str) -> None:
         self._widget = widget
         self._text = text
@@ -60,6 +62,8 @@ class _ToolTip:
 
 
 class App:
+    """主应用程序窗口，管理 UI 布局、视频解析、下载控制"""
+
     def __init__(self) -> None:
         self.root = tk.Tk()
         self.root.title("B站视频下载器")
@@ -78,6 +82,7 @@ class App:
         self.root.after(200, self._poll_progress)
 
     def _build_ui(self) -> None:
+        """构建 GUI 布局：登录按钮、URL 输入、视频信息、清晰度、保存路径、进度条、日志"""
         frame = ttk.Frame(self.root, padding=16)
         frame.pack(fill=tk.BOTH, expand=True)
 
@@ -204,6 +209,7 @@ class App:
         messagebox.showinfo("登录成功", "已成功登录B站账号，现在可以下载高清视频了")
 
     def log(self, msg: str) -> None:
+        """向日志文本框追加一条消息"""
         self.log_text.configure(state=tk.NORMAL)
         self.log_text.insert(tk.END, msg + "\n")
         self.log_text.see(tk.END)
@@ -215,6 +221,7 @@ class App:
             self.path_var.set(path)
 
     def _on_parse(self) -> None:
+        """解析视频链接，在后台线程获取视频信息"""
         url = self.url_var.get().strip()
         if not url:
             messagebox.showwarning("提示", "请输入视频链接")
@@ -265,6 +272,7 @@ class App:
         self.parse_btn.configure(state=tk.NORMAL)
 
     def _on_download(self) -> None:
+        """开始下载视频：校验输入、启动后台下载线程"""
         url = self.url_var.get().strip()
         if not url:
             messagebox.showwarning("提示", "请输入视频链接")
@@ -319,6 +327,8 @@ class App:
         threading.Thread(target=_run, daemon=True).start()
 
     def _poll_progress(self) -> None:
+        """定时从队列获取下载进度并刷新 GUI（由 tkinter after 驱动）"""
+
         try:
             while True:
                 msg = self.progress_queue.get_nowait()

@@ -23,6 +23,8 @@ def _credential_to_dict(credential: Credential) -> dict[str, str]:
 
 
 def save_credential(credential: Credential) -> None:
+    """将登录凭据持久化到本地 JSON 文件中"""
+
     path = _get_credential_path()
     path.parent.mkdir(parents=True, exist_ok=True)
     data = _credential_to_dict(credential)
@@ -31,6 +33,8 @@ def save_credential(credential: Credential) -> None:
 
 
 def load_credential() -> Credential | None:
+    """从本地 JSON 文件加载之前保存的登录凭据"""
+
     path = _get_credential_path()
     if not path.exists():
         return None
@@ -43,6 +47,8 @@ def load_credential() -> Credential | None:
 
 
 def delete_credential() -> None:
+    """删除本地保存的登录凭据文件"""
+
     path = _get_credential_path()
     if path.exists():
         path.unlink()

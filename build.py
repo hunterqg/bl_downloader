@@ -7,6 +7,7 @@ from pathlib import Path
 
 
 def main() -> None:
+    """使用 PyInstaller 将项目打包为 Windows 可执行文件，并捆绑 ffmpeg"""
     project_root = Path(__file__).resolve().parent
     dist_dir = project_root / "dist"
     app_dir = dist_dir / "bl_downloader"
