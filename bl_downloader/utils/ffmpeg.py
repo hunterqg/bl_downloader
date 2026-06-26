@@ -47,7 +47,8 @@ def merge_video_audio(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
+        encoding='utf-8',
+        errors='replace',
     )
 
     duration_pattern = re.compile(r'Duration: (\d+):(\d+):(\d+)\.(\d+)')
